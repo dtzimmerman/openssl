@@ -33,7 +33,7 @@ print<<___;
 	call	OPENSSL_cpuid_setup
 
 .hidden	OPENSSL_ia32cap_P
-.comm	OPENSSL_ia32cap_P,16,4
+.comm	OPENSSL_ia32cap_P,16,8
 
 .text
 
@@ -192,6 +192,7 @@ OPENSSL_ia32_cpuid:
 	mov	\$7,%eax
 	xor	%ecx,%ecx
 	cpuid
+	movd	%eax,%xmm1		# put aside leaf 07H Max Sub-leaves
 	bt	\$26,%r9d		# check XSAVE bit, cleared on Knights
 	jc	.Lnotknights
 	and	\$0xfff7ffff,%ebx	# clear ADCX/ADOX flag
@@ -202,9 +203,22 @@ OPENSSL_ia32_cpuid:
 	jne	.Lnotskylakex
 	and	\$0xfffeffff,%ebx	# ~(1<<16)
 					# suppress AVX512F flag on Skylake-X
-.Lnotskylakex:
-	mov	%ebx,8(%rdi)		# save extended feature flags
-	mov	%ecx,12(%rdi)
+
+.Lnotskylakex:				# save extended feature flags
+	mov	%ebx,8(%rdi)		# save cpuid(EAX=0x7, ECX=0x0).EBX to OPENSSL_ia32cap_P[2]
+	mov	%ecx,12(%rdi)		# save cpuid(EAX=0x7, ECX=0x0).ECX to OPENSSL_ia32cap_P[3]
+	mov	%edx,16(%rdi)		# save cpuid(EAX=0x7, ECX=0x0).EDX to OPENSSL_ia32cap_P[4]
+
+	movd	%xmm1,%eax		# Restore leaf 07H Max Sub-leaves
+	cmp	\$0x1,%eax			# Do we have cpuid(EAX=0x7, ECX=0x1)?
+	jb .Lno_extended_info
+	mov	\$7,%eax
+	mov \$1,%ecx
+	cpuid					# cpuid(EAX=0x7, ECX=0x1)
+	mov	%eax,20(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EAX to OPENSSL_ia32cap_P[5]
+	mov	%edx,24(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EDX to OPENSSL_ia32cap_P[6]
+	mov	%ebx,28(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EBX to OPENSSL_ia32cap_P[7]
+
 .Lno_extended_info:
 
 	bt	\$27,%r9d		# check OSXSAVE bit
