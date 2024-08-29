@@ -33,8 +33,7 @@ print<<___;
 	call	OPENSSL_cpuid_setup
 
 .hidden	OPENSSL_ia32cap_P
-.comm	OPENSSL_ia32cap_P,16,8
-
+.comm	OPENSSL_ia32cap_P,16,10
 .text
 
 .globl	OPENSSL_atomic_add
@@ -212,12 +211,21 @@ OPENSSL_ia32_cpuid:
 	movd	%xmm1,%eax		# Restore leaf 07H Max Sub-leaves
 	cmp	\$0x1,%eax			# Do we have cpuid(EAX=0x7, ECX=0x1)?
 	jb .Lno_extended_info
-	mov	\$7,%eax
-	mov \$1,%ecx
+	mov	\$0x7,%eax
+	mov \$0x1,%ecx
 	cpuid					# cpuid(EAX=0x7, ECX=0x1)
 	mov	%eax,20(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EAX to OPENSSL_ia32cap_P[5]
 	mov	%edx,24(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EDX to OPENSSL_ia32cap_P[6]
 	mov	%ebx,28(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EBX to OPENSSL_ia32cap_P[7]
+	mov	%ecx,32(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EBX to OPENSSL_ia32cap_P[8]
+
+	and \$0x80000,%edx		# Mask cpuid(EAX=0x7, ECX=0x1).EDX bit 19 to detect AVX10 support
+	cmp \$0x0,%edx
+	je .Lno_extended_info
+	mov	\$0x24,%eax			# Have AVX10 Support, query for details
+	mov \$0x0,%ecx
+	cpuid					# cpuid(EAX=0x24, ECX=0x0) AVX10 Leaf
+	mov	%ebx,36(%rdi)		# save cpuid(EAX=0x24, ECX=0x0).EBX to OPENSSL_ia32cap_P[9]
 
 .Lno_extended_info:
 

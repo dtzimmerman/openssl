@@ -14,7 +14,7 @@
         defined(__x86_64) || defined(__x86_64__) || \
         defined(_M_AMD64) || defined(_M_X64)
 
-extern unsigned int OPENSSL_ia32cap_P[8];
+extern unsigned int OPENSSL_ia32cap_P[10];
 
 # if defined(OPENSSL_CPUID_OBJ)
 
