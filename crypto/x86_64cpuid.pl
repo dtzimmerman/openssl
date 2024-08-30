@@ -27,13 +27,14 @@ open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\""
 				 ("%rdi","%rsi","%rdx","%rcx");	# Unix order
 
 print<<___;
+#include crypto/cryptlib.h
 .extern		OPENSSL_cpuid_setup
 .hidden		OPENSSL_cpuid_setup
 .section	.init
 	call	OPENSSL_cpuid_setup
 
 .hidden	OPENSSL_ia32cap_P
-.comm	OPENSSL_ia32cap_P,16,10
+.comm	OPENSSL_ia32cap_P,16,10	# <--Should match with internal/cryptlib.h OPENSSL_IA32CAP_P_MAX_INDEXES
 .text
 
 .globl	OPENSSL_atomic_add
