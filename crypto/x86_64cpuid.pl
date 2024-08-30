@@ -217,7 +217,7 @@ OPENSSL_ia32_cpuid:
 	mov	%eax,20(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EAX to OPENSSL_ia32cap_P[5]
 	mov	%edx,24(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EDX to OPENSSL_ia32cap_P[6]
 	mov	%ebx,28(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EBX to OPENSSL_ia32cap_P[7]
-	mov	%ecx,32(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).EBX to OPENSSL_ia32cap_P[8]
+	mov	%ecx,32(%rdi)		# save cpuid(EAX=0x7, ECX=0x1).ECX to OPENSSL_ia32cap_P[8]
 
 	and \$0x80000,%edx		# Mask cpuid(EAX=0x7, ECX=0x1).EDX bit 19 to detect AVX10 support
 	cmp \$0x0,%edx
