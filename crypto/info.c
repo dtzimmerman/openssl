@@ -23,22 +23,128 @@
 #if defined(__arm__) || defined(__arm) || defined(__aarch64__)
 # include "arm_arch.h"
 # define CPU_INFO_STR_LEN 128
+# define CPU_INFO_DETAILED_STR_LEN 1
+# define CPU_INFO_FEATURES_STR_LEN 1
 #elif defined(__s390__) || defined(__s390x__)
 # include "s390x_arch.h"
 # define CPU_INFO_STR_LEN 2048
+# define CPU_INFO_DETAILED_STR_LEN 1
+# define CPU_INFO_FEATURES_STR_LEN 1
 #elif defined(__riscv)
 # include "crypto/riscv_arch.h"
 # define CPU_INFO_STR_LEN 2048
+# define CPU_INFO_DETAILED_STR_LEN 1
+# define CPU_INFO_FEATURES_STR_LEN 1
 #else
-# define CPU_INFO_STR_LEN 128
+# define CPU_INFO_STR_LEN 256
+# define CPU_INFO_DETAILED_STR_LEN 1024
+# define CPU_INFO_FEATURES_STR_LEN 1024
 #endif
+#if defined(__i386)   || defined(__i386__)   || defined(_M_IX86) || \
+    defined(__x86_64) || defined(__x86_64__) || \
+    defined(_M_AMD64) || defined(_M_X64)
+
+
+/* OPENSSL_ia32cap_P mapping
+
+OPENSSL_ia32cap_P[0] = cpuid(EAX=0x1).EDX
+OPENSSL_ia32cap_P[1] = cpuid(EAX=0x1).ECX
+OPENSSL_ia32cap_P[2] = cpuid(EAX=0x7, ECX=0x0).EBX
+OPENSSL_ia32cap_P[3] = cpuid(EAX=0x7, ECX=0x0).ECX
+
+OPENSSL_ia32cap_P[4] = cpuid(EAX=0x7, ECX=0x0).EDX <-- Hybrid Core, MSR Enumeration Support
+OPENSSL_ia32cap_P[5] = cpuid(EAX=0x7, ECX=0x1).EAX <-- SHA512, SM3, SM4, AVX-IFMA
+OPENSSL_ia32cap_P[6] = cpuid(EAX=0x7, ECX=0x1).EDX <-- AVX10, APX Foundation
+OPENSSL_ia32cap_P[7] = cpuid(EAX=0x7, ECX=0x1).EBX <-- Reserved for future features
+
+OPENSSL_ia32cap_P[8] = cpuid(EAX=0x7, ECX=0x1).ECX <-- Reserverd for future features
+OPENSSL_ia32cap_P[9] = cpuid(EAX=0x24, ECX=0x0).EBX <-- AVX10 Details
+
+*/
+/* Configure our CPUID feature flag definitions based on 
+   information stored in OPENSSL_ia32cap_P[OPENSSL_IA32CAP_P_MAX_INDEXES]
+   and noted here: https://docs.openssl.org/master/man3/OPENSSL_ia32cap/#description
+ */
+
+#define CPUID_TSC               (OPENSSL_ia32cap_P[0] & (1<<4))
+#define CPUID_CLFLUSH           (OPENSSL_ia32cap_P[0] & (1<<19))
+#define CPUID_RC4               (OPENSSL_ia32cap_P[0] & (1<<20))
+#define CPUID_MMX               (OPENSSL_ia32cap_P[0] & (1<<23))
+#define CPUID_FXSR              (OPENSSL_ia32cap_P[0] & (1<<24))
+#define CPUID_SSE               (OPENSSL_ia32cap_P[0] & (1<<25))
+#define CPUID_SSE2              (OPENSSL_ia32cap_P[0] & (1<<26))
+#define CPUID_HYPERTHREADING    (OPENSSL_ia32cap_P[0] & (1<<28))
+#define CPUID_GENUINE_INTEL     (OPENSSL_ia32cap_P[0] & (1<<30))
+
+#define CPUID_SSE3              (OPENSSL_ia32cap_P[1] & (1<<(32-32)))
+#define CPUID_PCLMULQDQ         (OPENSSL_ia32cap_P[1] & (1<<(33-32)))
+#define CPUID_SSSE3             (OPENSSL_ia32cap_P[1] & (1<<(41-32)))
+#define CPUID_AMD_XOP           (OPENSSL_ia32cap_P[1] & (1<<(43-32)))
+#define CPUID_AUTHENTIC_AMD     (OPENSSL_ia32cap_P[1] & (1<<(43-32)))
+#define CPUID_MOVBE             (OPENSSL_ia32cap_P[1] & (1<<(54-32)))
+#define CPUID_AESNI             (OPENSSL_ia32cap_P[1] & (1<<(57-32)))
+#define CPUID_XSAVE             (OPENSSL_ia32cap_P[1] & (1<<(58-32)))
+#define CPUID_OSXSAVE           (OPENSSL_ia32cap_P[1] & (1<<(59-32)))
+#define CPUID_AVX               (OPENSSL_ia32cap_P[1] & (1<<(60-32)))
+#define CPUID_RDRAND            (OPENSSL_ia32cap_P[1] & (1<<(62-32)))
+
+#define CPUID_BMI1              (OPENSSL_ia32cap_P[2] & (1<<3))
+#define CPUID_AVX2              (OPENSSL_ia32cap_P[2] & (1<<5))
+#define CPUID_BMI2              (OPENSSL_ia32cap_P[2] & (1<<8))
+#define CPUID_AVX512F           (OPENSSL_ia32cap_P[2] & (1<<16))
+#define CPUID_AVX512DQ          (OPENSSL_ia32cap_P[2] & (1<<17))
+#define CPUID_RDSEED            (OPENSSL_ia32cap_P[2] & (1<<18))
+#define CPUID_ADCX_ADOX         (OPENSSL_ia32cap_P[2] & (1<<19))
+#define CPUID_AVX512IFMA        (OPENSSL_ia32cap_P[2] & (1<<21))
+#define CPUID_SHA               (OPENSSL_ia32cap_P[2] & (1<<29))
+#define CPUID_AVX512BW          (OPENSSL_ia32cap_P[2] & (1<<30))
+#define CPUID_AVX512VL          (OPENSSL_ia32cap_P[2] & (1<<31))
+
+#define CPUID_VAES              (OPENSSL_ia32cap_P[3] & (1<<(41-32)))
+#define CPUID_VPCLMULQDQ        (OPENSSL_ia32cap_P[3] & (1<<(42-32)))
+
+#define CPUID_HYBRID_CPU        (OPENSSL_ia32cap_P[4] & (1<<15))
+#define CPUID_IA32_ARCH_CAP_MSR (OPENSSL_ia32cap_P[4] & (1<<29))
+
+#define CPUID_SHA512            (OPENSSL_ia32cap_P[5] & (1<<0))
+#define CPUID_SM3               (OPENSSL_ia32cap_P[5] & (1<<1))
+#define CPUID_SM4               (OPENSSL_ia32cap_P[5] & (1<<2))
+#define CPUID_AVXIFMA           (OPENSSL_ia32cap_P[5] & (1<<23))
+
+#define CPUID_USER_MSR          (OPENSSL_ia32cap_P[6] & (1<<(47-32)))
+#define CPUID_AVX10             (OPENSSL_ia32cap_P[6] & (1<<(51-32)))
+#define CPUID_APXF              (OPENSSL_ia32cap_P[6] & (1<<(53-32)))
+
+#define CPUID_AVX10_VER         (OPENSSL_ia32cap_P[9] & (0xFF)) // First 8 bits are version so mask out the rest
+#define CPUID_AVX10_XMM         (OPENSSL_ia32cap_P[9] & (1<<16))
+#define CPUID_AVX10_YMM         (OPENSSL_ia32cap_P[9] & (1<<17))
+#define CPUID_AVX10_ZMM         (OPENSSL_ia32cap_P[9] & (1<<18))
+
+#endif
+
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c %c%c%c%c"
+#define BYTE_TO_BINARY(byte)  \
+  ((byte) & 0x80 ? '1' : '0'), \
+  ((byte) & 0x40 ? '1' : '0'), \
+  ((byte) & 0x20 ? '1' : '0'), \
+  ((byte) & 0x10 ? '1' : '0'), \
+  ((byte) & 0x08 ? '1' : '0'), \
+  ((byte) & 0x04 ? '1' : '0'), \
+  ((byte) & 0x02 ? '1' : '0'), \
+  ((byte) & 0x01 ? '1' : '0') 
 
 /* extern declaration to avoid warning */
 extern char ossl_cpu_info_str[];
+extern char ossl_cpu_info_str_env[];
+extern char ossl_cpu_info_str_detailed[];
+extern char ossl_cpu_info_str_features[];
 
 static char *seed_sources = NULL;
 
 char ossl_cpu_info_str[CPU_INFO_STR_LEN] = "";
+char ossl_cpu_info_str_env[CPU_INFO_STR_LEN] = "";
+char ossl_cpu_info_str_detailed[CPU_INFO_DETAILED_STR_LEN] = "";
+char ossl_cpu_info_str_features[CPU_INFO_FEATURES_STR_LEN] = "";
 #define CPUINFO_PREFIX "CPUINFO: "
 
 static CRYPTO_ONCE init_info = CRYPTO_ONCE_STATIC_INIT;
@@ -64,10 +170,75 @@ DEFINE_RUN_ONCE_STATIC(init_info_strings)
                  (unsigned long long)OPENSSL_ia32cap_P[8] |
                  (unsigned long long)OPENSSL_ia32cap_P[9] << 32);
     
-    if ((env = getenv("OPENSSL_ia32cap")) != NULL)
+    if ((env = getenv("OPENSSL_ia32cap")) != NULL) {
         BIO_snprintf(ossl_cpu_info_str + strlen(ossl_cpu_info_str),
                      sizeof(ossl_cpu_info_str) - strlen(ossl_cpu_info_str),
                      " env:%s", env);
+        BIO_snprintf(ossl_cpu_info_str_env, sizeof(ossl_cpu_info_str_env),"%s", env);
+    }
+
+    for (int i = 0; i < OPENSSL_IA32CAP_P_MAX_INDEXES; i++) {
+
+        // Allocate for 32 bit uint and 8 spaces for binary representation
+        char binStr[40] = "0";
+        unsigned int x = OPENSSL_ia32cap_P[i];
+
+        BIO_snprintf(binStr, sizeof(binStr),""BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN" ",  BYTE_TO_BINARY(x>>24), BYTE_TO_BINARY(x>>16),  BYTE_TO_BINARY(x>>8), BYTE_TO_BINARY(x));
+
+        BIO_snprintf(ossl_cpu_info_str_detailed + strlen(ossl_cpu_info_str_detailed), sizeof(ossl_cpu_info_str_detailed),"OPENSSL_ia32cap_P[%d]:\t%08x\t%08X\t%s\n", i, (unsigned int)OPENSSL_ia32cap_P[i], (unsigned int)OPENSSL_ia32cap_P[i], binStr);
+
+    }
+
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_TSC:\t\t%s\n", (CPUID_TSC ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_CLFLUSH:\t\t%s\n", (CPUID_CLFLUSH ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_RC4:\t\t%s\n", (CPUID_RC4 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_MMX:\t\t%s\n", (CPUID_MMX ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_FXSR:\t\t%s\n", (CPUID_FXSR ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SSE:\t\t%s\n", (CPUID_SSE ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SSE2:\t\t%s\n", (CPUID_SSE2 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_HYPERTHREADING:\t%s\n", (CPUID_HYPERTHREADING ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_GENUINE_INTEL:\t%s\n", (CPUID_GENUINE_INTEL ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SSE3:\t\t%s\n", (CPUID_SSE3 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_PCLMULQDQ:\t%s\n", (CPUID_PCLMULQDQ ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SSSE3:\t\t%s\n", (CPUID_SSSE3 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AUTHENTIC_AMD:\t%s\n", (CPUID_AUTHENTIC_AMD ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AMD_XOP:\t\t%s\n", (CPUID_AMD_XOP ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_MOVBE:\t\t%s\n", (CPUID_MOVBE ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AESNI:\t\t%s\n", (CPUID_AESNI ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_XSAVE:\t\t%s\n", (CPUID_XSAVE ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_OSXSAVE:\t\t%s\n", (CPUID_OSXSAVE ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX:\t\t%s\n", (CPUID_AVX ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_RDRAND:\t\t%s\n", (CPUID_RDRAND ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_BMI1:\t\t%s\n", (CPUID_BMI1 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX2:\t\t%s\n", (CPUID_AVX2 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_BMI2:\t\t%s\n", (CPUID_BMI2 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512F:\t\t%s\n", (CPUID_AVX512F ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512DQ:\t\t%s\n", (CPUID_AVX512DQ ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_RDSEED:\t\t%s\n", (CPUID_RDSEED ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_ADCX_ADOX:\t%s\n", (CPUID_ADCX_ADOX ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512IFMA:\t%s\n", (CPUID_AVX512IFMA ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SHA:\t\t%s\n", (CPUID_SHA ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512BW:\t\t%s\n", (CPUID_AVX512BW ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512VL:\t\t%s\n", (CPUID_AVX512VL ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_VAES:\t\t%s\n", (CPUID_VAES ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_VPCLMULQDQ:\t%s\n", (CPUID_VPCLMULQDQ ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_HYBRID_CPU:\t%s\n", (CPUID_HYBRID_CPU ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_IA32_ARCHCAP_MSR:\t%s\n", (CPUID_IA32_ARCH_CAP_MSR ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SHA512:\t\t%s\n", (CPUID_SHA512 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SM3:\t\t%s\n", (CPUID_SM3 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SM4:\t\t%s\n", (CPUID_SM4 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVXIFMA:\t\t%s\n", (CPUID_AVXIFMA ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_USER_MSR:\t\t%s\n", (CPUID_USER_MSR ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10:\t\t%s\n", (CPUID_AVX10 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_APXF:\t\t%s\n", (CPUID_APXF ? "TRUE" : "FALSE"));
+
+        if (CPUID_AVX10) {
+            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10_VER:\t%d\n", CPUID_AVX10_VER);
+            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10_XMM:\t%s\n", (CPUID_AVX10_XMM ? "TRUE" : "FALSE"));
+            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10_YMM:\t%s\n", (CPUID_AVX10_YMM ? "TRUE" : "FALSE"));
+            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10_ZMM:\t%s\n", (CPUID_AVX10_ZMM ? "TRUE" : "FALSE"));
+        }
+
 # elif defined(__arm__) || defined(__arm) || defined(__aarch64__)
     const char *env;
 
@@ -77,6 +248,7 @@ DEFINE_RUN_ONCE_STATIC(init_info_strings)
         BIO_snprintf(ossl_cpu_info_str + strlen(ossl_cpu_info_str),
                      sizeof(ossl_cpu_info_str) - strlen(ossl_cpu_info_str),
                      " env:%s", env);
+
 # elif defined(__s390__) || defined(__s390x__)
     const char *env;
 
@@ -249,6 +421,18 @@ const char *OPENSSL_info(int t)
          */
         if (ossl_cpu_info_str[0] != '\0')
             return ossl_cpu_info_str + strlen(CPUINFO_PREFIX);
+        break;
+    case OPENSSL_INFO_CPU_SETTINGS_DETAILED:
+        if (ossl_cpu_info_str_detailed[0] != '\0')
+            return ossl_cpu_info_str_detailed;
+        break;
+    case OPENSSL_INFO_CPU_SETTINGS_FEATURES:
+        if (ossl_cpu_info_str[0] != '\0')
+            return ossl_cpu_info_str_features;
+        break;
+    case OPENSSL_INFO_CPU_SETTINGS_ENV:
+        if (ossl_cpu_info_str_env[0] != '\0')
+            return ossl_cpu_info_str_env;
         break;
     default:
         break;
