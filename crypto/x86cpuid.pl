@@ -175,6 +175,9 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 	&and	("esi",0xfeffffff);	# clear FXSR
 &set_label("clear_avx");
 	&and	("ebp",0xefffe7ff);	# clear AVX, FMA and AMD XOP bits
+	&and	(&DWP(20,"edi"),0xff7fffff);	# ~(1<<23) clear AVXIFMA,
+											# which is VEX-encoded
+											# and requires YMM state support
 	&and	(&DWP(8,"edi"),0xffffffdf);	# clear AVX2
 &set_label("done");
 	&mov	("eax","esi");

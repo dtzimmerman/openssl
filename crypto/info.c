@@ -30,7 +30,7 @@
 # include "crypto/riscv_arch.h"
 # define CPU_INFO_STR_LEN 2048
 #else
-# define CPU_INFO_STR_LEN 128
+# define CPU_INFO_STR_LEN 256
 #endif
 
 /* extern declaration to avoid warning */
@@ -52,9 +52,9 @@ DEFINE_RUN_ONCE_STATIC(init_info_strings)
     const char *env;
 
     BIO_snprintf(ossl_cpu_info_str, sizeof(ossl_cpu_info_str),
-                 CPUINFO_PREFIX "OPENSSL_ia32cap=0x%llx:0x%llx:0x%llx:0x%llx:0x%llx",
-                 (unsigned long long)OPENSSL_ia32cap_P[0] |
-                 (unsigned long long)OPENSSL_ia32cap_P[1] << 32,
+                 CPUINFO_PREFIX "OPENSSL_ia32cap=0x%.16llx:0x%.16llx:0x%.16llx:0x%.16llx:0x%.16llx",
+                 ((unsigned long long)OPENSSL_ia32cap_P[0] |
+                 (unsigned long long)OPENSSL_ia32cap_P[1] << 32),
                  (unsigned long long)OPENSSL_ia32cap_P[2] |
                  (unsigned long long)OPENSSL_ia32cap_P[3] << 32,
                  (unsigned long long)OPENSSL_ia32cap_P[4] |

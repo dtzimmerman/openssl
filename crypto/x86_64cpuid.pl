@@ -246,6 +246,9 @@ OPENSSL_ia32_cpuid:
 	cmp	\$6,%eax
 	je	.Ldone
 .Lclear_avx:
+	andl	\$0xff7fffff,20(%rdi)   # ~(1<<23)
+									# clear AVXIFMA, which is VEX-encoded
+									# and requires YMM state support
 	mov	\$0xefffe7ff,%eax	# ~(1<<28|1<<12|1<<11)
 	and	%eax,%r9d		# clear AVX, FMA and AMD XOP bits
 	mov	\$0x3fdeffdf,%eax	# ~(1<<31|1<<30|1<<21|1<<16|1<<5)
