@@ -38,7 +38,7 @@
 #else
 # define CPU_INFO_STR_LEN 256
 # define CPU_INFO_DETAILED_STR_LEN 1024
-# define CPU_INFO_FEATURES_STR_LEN 1024
+# define CPU_INFO_FEATURES_STR_LEN 2100
 #endif
 #if defined(__i386)   || defined(__i386__)   || defined(_M_IX86) || \
     defined(__x86_64) || defined(__x86_64__) || \
@@ -185,59 +185,60 @@ DEFINE_RUN_ONCE_STATIC(init_info_strings)
 
         BIO_snprintf(binStr, sizeof(binStr),""BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN" "BYTE_TO_BINARY_PATTERN" ",  BYTE_TO_BINARY(x>>24), BYTE_TO_BINARY(x>>16),  BYTE_TO_BINARY(x>>8), BYTE_TO_BINARY(x));
 
-        BIO_snprintf(ossl_cpu_info_str_detailed + strlen(ossl_cpu_info_str_detailed), sizeof(ossl_cpu_info_str_detailed),"OPENSSL_ia32cap_P[%d]:\t%08x\t%08X\t%s\n", i, (unsigned int)OPENSSL_ia32cap_P[i], (unsigned int)OPENSSL_ia32cap_P[i], binStr);
+        BIO_snprintf(ossl_cpu_info_str_detailed + strlen(ossl_cpu_info_str_detailed), sizeof(ossl_cpu_info_str_detailed),"OPENSSL_ia32cap_P[%d]:\t%08X\t%s\n", i, (unsigned int)OPENSSL_ia32cap_P[i], binStr);
 
     }
 
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_TSC:\t\t%s\n", (CPUID_TSC ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_CLFLUSH:\t\t%s\n", (CPUID_CLFLUSH ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_RC4:\t\t%s\n", (CPUID_RC4 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_MMX:\t\t%s\n", (CPUID_MMX ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_FXSR:\t\t%s\n", (CPUID_FXSR ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SSE:\t\t%s\n", (CPUID_SSE ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SSE2:\t\t%s\n", (CPUID_SSE2 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_HYPERTHREADING:\t%s\n", (CPUID_HYPERTHREADING ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_GENUINE_INTEL:\t%s\n", (CPUID_GENUINE_INTEL ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SSE3:\t\t%s\n", (CPUID_SSE3 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_PCLMULQDQ:\t%s\n", (CPUID_PCLMULQDQ ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SSSE3:\t\t%s\n", (CPUID_SSSE3 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AUTHENTIC_AMD:\t%s\n", (CPUID_AUTHENTIC_AMD ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AMD_XOP:\t\t%s\n", (CPUID_AMD_XOP ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_MOVBE:\t\t%s\n", (CPUID_MOVBE ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AESNI:\t\t%s\n", (CPUID_AESNI ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_XSAVE:\t\t%s\n", (CPUID_XSAVE ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_OSXSAVE:\t\t%s\n", (CPUID_OSXSAVE ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX:\t\t%s\n", (CPUID_AVX ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_RDRAND:\t\t%s\n", (CPUID_RDRAND ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_BMI1:\t\t%s\n", (CPUID_BMI1 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX2:\t\t%s\n", (CPUID_AVX2 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_BMI2:\t\t%s\n", (CPUID_BMI2 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512F:\t\t%s\n", (CPUID_AVX512F ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512DQ:\t\t%s\n", (CPUID_AVX512DQ ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_RDSEED:\t\t%s\n", (CPUID_RDSEED ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_ADCX_ADOX:\t%s\n", (CPUID_ADCX_ADOX ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512IFMA:\t%s\n", (CPUID_AVX512IFMA ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SHA:\t\t%s\n", (CPUID_SHA ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512BW:\t\t%s\n", (CPUID_AVX512BW ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX512VL:\t\t%s\n", (CPUID_AVX512VL ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_VAES:\t\t%s\n", (CPUID_VAES ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_VPCLMULQDQ:\t%s\n", (CPUID_VPCLMULQDQ ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_HYBRID_CPU:\t%s\n", (CPUID_HYBRID_CPU ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_IA32_ARCHCAP_MSR:\t%s\n", (CPUID_IA32_ARCH_CAP_MSR ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SHA512:\t\t%s\n", (CPUID_SHA512 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SM3:\t\t%s\n", (CPUID_SM3 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_SM4:\t\t%s\n", (CPUID_SM4 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVXIFMA:\t\t%s\n", (CPUID_AVXIFMA ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_USER_MSR:\t\t%s\n", (CPUID_USER_MSR ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10:\t\t%s\n", (CPUID_AVX10 ? "TRUE" : "FALSE"));
-        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_APXF:\t\t%s\n", (CPUID_APXF ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][04]\tCPUID_TSC:\t\t%s\n", (CPUID_TSC ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][19]\tCPUID_CLFLUSH:\t\t%s\n", (CPUID_CLFLUSH ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][20]\tCPUID_RC4:\t\t%s\n", (CPUID_RC4 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][23]\tCPUID_MMX:\t\t%s\n", (CPUID_MMX ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][24]\tCPUID_FXSR:\t\t%s\n", (CPUID_FXSR ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][25]\tCPUID_SSE:\t\t%s\n", (CPUID_SSE ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][26]\tCPUID_SSE2:\t\t%s\n", (CPUID_SSE2 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][28]\tCPUID_HYPERTHREADING:\t%s\n", (CPUID_HYPERTHREADING ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[0][29]\tCPUID_GENUINE_INTEL:\t%s\n", (CPUID_GENUINE_INTEL ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][00]\tCPUID_SSE3:\t\t%s\n", (CPUID_SSE3 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][01]\tCPUID_PCLMULQDQ:\t%s\n", (CPUID_PCLMULQDQ ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][09]\tCPUID_SSSE3:\t\t%s\n", (CPUID_SSSE3 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][11]\tCPUID_AUTHENTIC_AMD:\t%s\n", (CPUID_AUTHENTIC_AMD ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][11]\tCPUID_AMD_XOP:\t\t%s\n", (CPUID_AMD_XOP ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][22]\tCPUID_MOVBE:\t\t%s\n", (CPUID_MOVBE ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][25]\tCPUID_AESNI:\t\t%s\n", (CPUID_AESNI ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][26]\tCPUID_XSAVE:\t\t%s\n", (CPUID_XSAVE ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][27]\tCPUID_OSXSAVE:\t\t%s\n", (CPUID_OSXSAVE ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][28]\tCPUID_AVX:\t\t%s\n", (CPUID_AVX ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[1][30]\tCPUID_RDRAND:\t\t%s\n", (CPUID_RDRAND ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][03]\tCPUID_BMI1:\t\t%s\n", (CPUID_BMI1 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][05]\tCPUID_AVX2:\t\t%s\n", (CPUID_AVX2 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][08]\tCPUID_BMI2:\t\t%s\n", (CPUID_BMI2 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][16]\tCPUID_AVX512F:\t\t%s\n", (CPUID_AVX512F ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][17]\tCPUID_AVX512DQ:\t\t%s\n", (CPUID_AVX512DQ ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][18]\tCPUID_RDSEED:\t\t%s\n", (CPUID_RDSEED ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][19]\tCPUID_ADCX_ADOX:\t%s\n", (CPUID_ADCX_ADOX ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][21]\tCPUID_AVX512IFMA:\t%s\n", (CPUID_AVX512IFMA ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][29]\tCPUID_SHA:\t\t%s\n", (CPUID_SHA ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][30]\tCPUID_AVX512BW:\t\t%s\n", (CPUID_AVX512BW ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[2][31]\tCPUID_AVX512VL:\t\t%s\n", (CPUID_AVX512VL ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[3][09]\tCPUID_VAES:\t\t%s\n", (CPUID_VAES ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[3][10]\tCPUID_VPCLMULQDQ:\t%s\n", (CPUID_VPCLMULQDQ ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[4][15]\tCPUID_HYBRID_CPU:\t%s\n", (CPUID_HYBRID_CPU ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[4][29]\tCPUID_IA32_ARCHCAP_MSR:\t%s\n", (CPUID_IA32_ARCH_CAP_MSR ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[5][00]\tCPUID_SHA512:\t\t%s\n", (CPUID_SHA512 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[5][01]\tCPUID_SM3:\t\t%s\n", (CPUID_SM3 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[5][02]\tCPUID_SM4:\t\t%s\n", (CPUID_SM4 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[5][23]\tCPUID_AVXIFMA:\t\t%s\n", (CPUID_AVXIFMA ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[6][15]\tCPUID_USER_MSR:\t\t%s\n", (CPUID_USER_MSR ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[6][19]\tCPUID_AVX10:\t\t%s\n", (CPUID_AVX10 ? "TRUE" : "FALSE"));
+        BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[6][21]\tCPUID_APXF:\t\t%s\n", (CPUID_APXF ? "TRUE" : "FALSE"));
 
         if (CPUID_AVX10) {
-            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10_VER:\t%d\n", CPUID_AVX10_VER);
-            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10_XMM:\t%s\n", (CPUID_AVX10_XMM ? "TRUE" : "FALSE"));
-            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10_YMM:\t%s\n", (CPUID_AVX10_YMM ? "TRUE" : "FALSE"));
-            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"CPUID_AVX10_ZMM:\t%s\n", (CPUID_AVX10_ZMM ? "TRUE" : "FALSE"));
+            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[9][00]\tCPUID_AVX10_VER:\t%d\n", CPUID_AVX10_VER);
+            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[9][16]\tCPUID_AVX10_XMM:\t%s\n", (CPUID_AVX10_XMM ? "TRUE" : "FALSE"));
+            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[9][17]\tCPUID_AVX10_YMM:\t%s\n", (CPUID_AVX10_YMM ? "TRUE" : "FALSE"));
+            BIO_snprintf(ossl_cpu_info_str_features + strlen(ossl_cpu_info_str_features), sizeof(ossl_cpu_info_str_features),"OPENSSL_ia32cap_P[9][18]\tCPUID_AVX10_ZMM:\t%s\n", (CPUID_AVX10_ZMM ? "TRUE" : "FALSE"));
         }
+
 
 # elif defined(__arm__) || defined(__arm) || defined(__aarch64__)
     const char *env;

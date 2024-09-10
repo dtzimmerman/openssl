@@ -31,7 +31,7 @@ void cpuid_info_display_extended()
     defined(_M_AMD64) || defined(_M_X64)
 
     BIO_printf(bio_s_out, "\nCPUID Extended Details:\n");
-    BIO_printf(bio_s_out, "Cap Bit Vector\t\tValue (hex)\tValue (HEX)\tValue (Binary)\t\t\t  [LSB]\n");
+    BIO_printf(bio_s_out, "Cap Bit Vector\t\tValue (HEX)\tValue (Binary)\t\t\t  [LSB]\n");
 
     const char *ossl_cpu_info_str_detailed = OPENSSL_info(OPENSSL_INFO_CPU_SETTINGS_DETAILED);
     BIO_printf(bio_s_out, "\n%s\n", ossl_cpu_info_str_detailed);
