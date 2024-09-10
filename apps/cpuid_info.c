@@ -70,10 +70,6 @@ int cpuid_info_main(int argc, char **argv)
     int all_data = 0; 
     int all_features = 0;
 
-    const char *ossl_cpu_info_str = OPENSSL_info(OPENSSL_INFO_CPU_SETTINGS);
-
-    const char *ossl_cpu_info_str_env = OPENSSL_info(OPENSSL_INFO_CPU_SETTINGS_ENV);
-
     if (bio_s_out == NULL)
         bio_s_out = dup_bio_out(FORMAT_TEXT);
 
@@ -109,12 +105,23 @@ opthelp:
     if (!opt_check_rest_arg(NULL))
         goto opthelp;
 
+    const char *ossl_cpu_info_str = OPENSSL_info(OPENSSL_INFO_CPU_SETTINGS);
+
+    const char *ossl_cpu_info_str_env = OPENSSL_info(OPENSSL_INFO_CPU_SETTINGS_ENV);
+
     BIO_printf(bio_s_out, "CPUID Information:\n");
 
     BIO_printf(bio_s_out, "\nOPENSSL_ia32cap:\n");
     char ossl_cpu_info_str_tmp[256] ="";
     char *startPtr = strchr(ossl_cpu_info_str, '=');
+
     char *endPtr = strchr(ossl_cpu_info_str, ' ');
+
+    // Support the case where there is no space found which indicates
+    // that env variable not set
+    if (endPtr == NULL)
+        endPtr = startPtr + strlen(startPtr);
+
     if (startPtr != NULL && endPtr != NULL) {
         strncpy(ossl_cpu_info_str_tmp, startPtr + 1, endPtr - startPtr - 1);
         ossl_cpu_info_str_tmp[endPtr - startPtr - 1] = '\0';
@@ -125,9 +132,7 @@ opthelp:
 
     if (ossl_cpu_info_str_env != NULL) {
         BIO_printf(bio_s_out, "\nOPENSSL_ia32cap Environment Variable:\n");
-
         BIO_printf(bio_s_out, "\n\t%s\n", ossl_cpu_info_str_env);
-
     }
 
     if (all_data) 
