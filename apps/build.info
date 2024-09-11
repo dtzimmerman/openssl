@@ -23,6 +23,12 @@ $OPENSSLSRC=\
 IF[{- $config{target} =~ /^(?:linux-x86)/ -}]
   $OPENSSLSRC=$OPENSSLSRC cpuid_info.c
 ENDIF
+IF[{- $config{target} =~ /^(?:VC-WIN64A)/ -}]
+  $OPENSSLSRC=$OPENSSLSRC cpuid_info.c
+ENDIF
+IF[{- $config{target} =~ /^(?:VC-WIN32)/ -}]
+  $OPENSSLSRC=$OPENSSLSRC cpuid_info.c
+ENDIF
 IF[{- !$disabled{'ec'} -}]
   $OPENSSLSRC=$OPENSSLSRC ec.c ecparam.c
 ENDIF
