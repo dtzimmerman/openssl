@@ -67,7 +67,7 @@ const OPTIONS cpuid_info_options[] = {
 int cpuid_info_main(int argc, char **argv)
 {
     int ret = 1;
-    int all_data = 0; 
+    int all_data = 0;
     int all_features = 0;
 
     if (bio_s_out == NULL)
@@ -135,7 +135,7 @@ opthelp:
         BIO_printf(bio_s_out, "\n\t%s\n", ossl_cpu_info_str_env);
     }
 
-    if (all_data) 
+    if (all_data)
         cpuid_info_display_extended();
 
     if (all_features)

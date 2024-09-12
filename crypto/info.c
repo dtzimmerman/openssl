@@ -61,7 +61,7 @@ OPENSSL_ia32cap_P[8] = cpuid(EAX=0x7, ECX=0x1).ECX <-- Reserverd for future feat
 OPENSSL_ia32cap_P[9] = cpuid(EAX=0x24, ECX=0x0).EBX <-- AVX10 Details
 
 */
-/* Configure our CPUID feature flag definitions based on 
+/* Configure our CPUID feature flag definitions based on
    information stored in OPENSSL_ia32cap_P[OPENSSL_IA32CAP_P_MAX_INDEXES]
    and noted here: https://docs.openssl.org/master/man3/OPENSSL_ia32cap/#description
  */
@@ -131,7 +131,7 @@ OPENSSL_ia32cap_P[9] = cpuid(EAX=0x24, ECX=0x0).EBX <-- AVX10 Details
   ((byte) & 0x08 ? '1' : '0'), \
   ((byte) & 0x04 ? '1' : '0'), \
   ((byte) & 0x02 ? '1' : '0'), \
-  ((byte) & 0x01 ? '1' : '0') 
+  ((byte) & 0x01 ? '1' : '0')
 
 /* extern declaration to avoid warning */
 extern char ossl_cpu_info_str[];
@@ -169,7 +169,7 @@ DEFINE_RUN_ONCE_STATIC(init_info_strings)
                  (unsigned long long)OPENSSL_ia32cap_P[7] << 32,
                  (unsigned long long)OPENSSL_ia32cap_P[8] |
                  (unsigned long long)OPENSSL_ia32cap_P[9] << 32);
-    
+
     if ((env = getenv("OPENSSL_ia32cap")) != NULL) {
         BIO_snprintf(ossl_cpu_info_str + strlen(ossl_cpu_info_str),
                      sizeof(ossl_cpu_info_str) - strlen(ossl_cpu_info_str),

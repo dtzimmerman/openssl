@@ -123,8 +123,8 @@ aka AVX512IFMA extension;
 
 =back
 
-The capability vector is further extended with EAX, EDX, and EBX values 
-returned by CPUID with EAX=7 and ECX=1 as input. Following bits 
+The capability vector is further extended with EAX, EDX, and EBX values
+returned by CPUID with EAX=7 and ECX=1 as input. Following bits
 are significant:
 
 =item bit #128+0 denoting availability of SHA512 extension;
