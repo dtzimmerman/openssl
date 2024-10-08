@@ -1,5 +1,5 @@
 #! /usr/bin/env perl
-# Copyright 2019-2023 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2019-2024 The OpenSSL Project Authors. All Rights Reserved.
 #
 # Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
@@ -50,7 +50,7 @@ my @commandline =
         ( 'x963kdf_digest_check',           'x963kdf-digest-check' ),
         ( 'dsa_sign_disabled',              'dsa-sign-disabled' ),
         ( 'tdes_encrypt_disabled',          'tdes-encrypt-disabled' ),
-        ( 'rsa_pkcs15_padding_disabled',    'rsa-pkcs15-padding-disabled' ),
+        ( 'rsa_pkcs15_pad_disabled',        'rsa-pkcs15-pad-disabled' ),
         ( 'rsa_pss_saltlen_check',          'rsa-pss-saltlen-check' ),
         ( 'rsa_sign_x931_disabled',         'rsa-sign-x931-pad-disabled' ),
         ( 'hkdf_key_check',                 'hkdf-key-check' ),
@@ -59,7 +59,8 @@ my @commandline =
         ( 'tls1_prf_key_check',             'tls1-prf-key-check' ),
         ( 'sshkdf_key_check',               'sshkdf-key-check' ),
         ( 'sskdf_key_check',                'sskdf-key-check' ),
-        ( 'x963kdf_key_check',              'x963kdf-key-check' )
+        ( 'x963kdf_key_check',              'x963kdf-key-check' ),
+        ( 'x942kdf_key_check',              'x942kdf-key-check' )
     );
 
 plan tests => 35 + (scalar @pedantic_okay) + (scalar @pedantic_fail)

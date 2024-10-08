@@ -10,6 +10,8 @@ The EVP_KDF-KB algorithm implements the Key-Based key derivation function
 (KBKDF).  KBKDF derives a key from repeated application of a keyed MAC to an
 input secret (and other optional values).
 
+The output is considered to be keying material.
+
 =head2 Identity
 
 "KBKDF" is the name for this implementation; it can be used with the
@@ -192,7 +194,7 @@ Support for KMAC was added in OpenSSL 3.1.
 
 =head1 COPYRIGHT
 
-Copyright 2019-2022 The OpenSSL Project Authors. All Rights Reserved.
+Copyright 2019-2024 The OpenSSL Project Authors. All Rights Reserved.
 Copyright 2019 Red Hat, Inc.
 
 Licensed under the Apache License 2.0 (the "License").  You may not use

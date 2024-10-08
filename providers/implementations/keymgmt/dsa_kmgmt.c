@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2023 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2019-2024 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -17,9 +17,8 @@
 #include <openssl/core_names.h>
 #include <openssl/bn.h>
 #include <openssl/err.h>
+#include "prov/securitycheck.h"
 #include "prov/providercommon.h"
-#include "prov/fipsindicator.h"
-#include "prov/fipscommon.h"
 #include "prov/implementations.h"
 #include "prov/provider_ctx.h"
 #include "crypto/dsa.h"
@@ -610,7 +609,7 @@ static void *dsa_gen(void *genctx, OSSL_CALLBACK *osslcb, void *cbarg)
      */
     if (!OSSL_FIPS_IND_ON_UNAPPROVED(gctx, OSSL_FIPS_IND_SETTABLE0,
                                      gctx->libctx, "DSA", "Keygen",
-                                     FIPS_dsa_sign_check))
+                                     ossl_fips_config_dsa_sign_disallowed))
         return 0;
 #endif
 
