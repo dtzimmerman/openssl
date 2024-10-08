@@ -1,5 +1,5 @@
 /*
- * Copyright 1999-2023 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1999-2024 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -76,6 +76,8 @@ static const X509V3_EXT_METHOD *standard_exts[] = {
     &ossl_v3_issuer_sign_tool,
     &ossl_v3_tls_feature,
     &ossl_v3_ext_admission,
+    &ossl_v3_authority_attribute_identifier,
+    &ossl_v3_role_spec_cert_identifier,
     &ossl_v3_battcons,
     &ossl_v3_delegated_name_constraints,
     &ossl_v3_user_notice,

@@ -1,7 +1,7 @@
 /*
  * {- join("\n * ", @autowarntext) -}
  *
- * Copyright 1999-2023 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1999-2024 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -1036,6 +1036,22 @@ DECLARE_ASN1_FUNCTIONS(OSSL_USER_NOTICE_SYNTAX)
 {-
     generate_stack_macros("USERNOTICE");
 -}
+
+typedef struct OSSL_ROLE_SPEC_CERT_ID_st {
+    GENERAL_NAME *roleName;
+    GENERAL_NAME *roleCertIssuer;
+    ASN1_INTEGER *roleCertSerialNumber;
+    GENERAL_NAMES *roleCertLocator;
+} OSSL_ROLE_SPEC_CERT_ID;
+
+DECLARE_ASN1_FUNCTIONS(OSSL_ROLE_SPEC_CERT_ID)
+{-
+    generate_stack_macros("OSSL_ROLE_SPEC_CERT_ID");
+-}
+
+typedef STACK_OF(OSSL_ROLE_SPEC_CERT_ID) OSSL_ROLE_SPEC_CERT_ID_SYNTAX;
+
+DECLARE_ASN1_FUNCTIONS(OSSL_ROLE_SPEC_CERT_ID_SYNTAX)
 
 # ifdef  __cplusplus
 }

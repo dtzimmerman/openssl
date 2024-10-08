@@ -9,8 +9,10 @@
  * https://www.openssl.org/source/license.html
  */
 
-#include "ssl_local.h"
 #include "internal/e_os.h"
+#include "internal/e_winsock.h"
+#include "ssl_local.h"
+
 #include <openssl/objects.h>
 #include <openssl/x509v3.h>
 #include <openssl/rand.h>
@@ -4809,11 +4811,6 @@ int ssl_undefined_function(SSL *s)
 int ssl_undefined_void_function(void)
 {
     ERR_raise(ERR_LIB_SSL, ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED);
-    return 0;
-}
-
-int ssl_undefined_const_function(const SSL *s)
-{
     return 0;
 }
 

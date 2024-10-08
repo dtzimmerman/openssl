@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2023 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2016-2024 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -30,8 +30,6 @@
 #include "prov/implementations.h"
 #include "prov/provider_util.h"
 #include "prov/securitycheck.h"
-#include "prov/fipscommon.h"
-#include "prov/fipsindicator.h"
 #include "internal/e_os.h"
 #include "internal/params.h"
 
@@ -188,7 +186,7 @@ static size_t kdf_hkdf_size(KDF_HKDF *ctx)
         return 0;
     }
     sz = EVP_MD_get_size(md);
-    if (sz < 0)
+    if (sz <= 0)
         return 0;
 
     return sz;
@@ -203,7 +201,7 @@ static int fips_hkdf_key_check_passed(KDF_HKDF *ctx)
     if (!key_approved) {
         if (!OSSL_FIPS_IND_ON_UNAPPROVED(ctx, OSSL_FIPS_IND_SETTABLE0,
                                          libctx, "HKDF", "Key size",
-                                         FIPS_hkdf_key_check)) {
+                                         ossl_fips_config_hkdf_key_check)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_KEY_LENGTH);
             return 0;
         }
@@ -268,7 +266,7 @@ static int hkdf_common_set_ctx_params(KDF_HKDF *ctx, const OSSL_PARAM params[])
             return 0;
 
         md = ossl_prov_digest_md(&ctx->digest);
-        if ((EVP_MD_get_flags(md) & EVP_MD_FLAG_XOF) != 0) {
+        if (EVP_MD_xof(md)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_XOF_DIGESTS_NOT_ALLOWED);
             return 0;
         }
@@ -465,7 +463,7 @@ static int HKDF(OSSL_LIB_CTX *libctx, const EVP_MD *evp_md,
     size_t prk_len;
 
     sz = EVP_MD_get_size(evp_md);
-    if (sz < 0)
+    if (sz <= 0)
         return 0;
     prk_len = (size_t)sz;
 
@@ -512,7 +510,7 @@ static int HKDF_Extract(OSSL_LIB_CTX *libctx, const EVP_MD *evp_md,
 {
     int sz = EVP_MD_get_size(evp_md);
 
-    if (sz < 0)
+    if (sz <= 0)
         return 0;
     if (prk_len != (size_t)sz) {
         ERR_raise(ERR_LIB_PROV, PROV_R_WRONG_OUTPUT_BUFFER_SIZE);
@@ -723,7 +721,7 @@ static int prov_tls13_hkdf_generate_secret(OSSL_LIB_CTX *libctx,
         EVP_MD_CTX_free(mctx);
 
         /* Generate the pre-extract secret */
-        if (!prov_tls13_hkdf_expand(md, prevsecret, mdlen,
+        if (!prov_tls13_hkdf_expand(md, prevsecret, prevsecretlen,
                                     prefix, prefixlen, label, labellen,
                                     hash, mdlen, preextractsec, mdlen))
             return 0;
@@ -756,7 +754,7 @@ static int fips_tls1_3_digest_check_passed(KDF_HKDF *ctx, const EVP_MD *md)
     if (digest_unapproved) {
         if (!OSSL_FIPS_IND_ON_UNAPPROVED(ctx, OSSL_FIPS_IND_SETTABLE0,
                                          libctx, "TLS13 KDF", "Digest",
-                                         FIPS_tls13_kdf_digest_check)) {
+                                         ossl_fips_config_tls13_kdf_digest_check)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_DIGEST_NOT_ALLOWED);
             return 0;
         }
@@ -792,7 +790,7 @@ static int fips_tls1_3_key_check_passed(KDF_HKDF *ctx)
     if (!key_approved) {
         if (!OSSL_FIPS_IND_ON_UNAPPROVED(ctx, OSSL_FIPS_IND_SETTABLE1,
                                          libctx, "TLS13 KDF", "Key size",
-                                         FIPS_tls13_kdf_key_check)) {
+                                         ossl_fips_config_tls13_kdf_key_check)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_KEY_LENGTH);
             return 0;
         }

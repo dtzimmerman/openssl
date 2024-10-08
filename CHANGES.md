@@ -12,6 +12,7 @@ appropriate release branch.
 OpenSSL Releases
 ----------------
 
+ - [OpenSSL 3.5](#openssl-35)
  - [OpenSSL 3.4](#openssl-34)
  - [OpenSSL 3.3](#openssl-33)
  - [OpenSSL 3.2](#openssl-32)
@@ -27,9 +28,47 @@ OpenSSL Releases
 OpenSSL 3.4
 -----------
 
+### Changes between 3.4 and 3.5 [xx XXX xxxx]
+
+ * none yet
+
+OpenSSL 3.4
+-----------
+
 ### Changes between 3.3 and 3.4 [xx XXX xxxx]
 
- * Add FIPS indicators to the FIPS provider.
+ * For the FIPS provider only, replaced the primary DRBG with a continuous
+   health check module.  This also removes the now forbidden DRBG chaining.
+
+   *Paul Dale*
+
+ * Improved base64 BIO correctness and error reporting.
+
+   *Viktor Dukhovni*
+
+ * Added support for directly fetched composite signature algorithms such as
+   RSA-SHA2-256 including new API functions in the EVP_PKEY_sign,
+   EVP_PKEY_verify and EVP_PKEY_verify_recover groups.
+
+   *Richard Levitte*
+
+ * XOF Digest API improvements
+
+   EVP_MD_CTX_get_size() and EVP_MD_CTX_size are macros that were aliased to
+   EVP_MD_get_size which returns a constant value. XOF Digests such as SHAKE
+   have an output size that is not fixed, so calling EVP_MD_get_size() is not
+   sufficent. The existing macros now point to the new function
+   EVP_MD_CTX_get_size_ex() which will retrieve the "size" for a XOF digest,
+   otherwise it falls back to calling EVP_MD_get_size(). Note that the SHAKE
+   implementation did not have a context getter previously, so the "size" will
+   only be able to be retrieved with new providers.
+
+   Also added a EVP_xof() helper.
+
+   *Shane Lontis*
+
+ * Added FIPS indicators to the FIPS provider.
+
    FIPS 140-3 requires indicators to be used if the FIPS provider allows
    non-approved algorithms. An algorithm is approved if it passes all
    required checks such as minimum key size. By default an error will
@@ -49,21 +88,44 @@ OpenSSL 3.4
 
    [fips_module(7)]: https://docs.openssl.org/master/man7/fips_module/#FIPS indicators
 
-   *Shane Lontis, Paul Dale and Po-Hsing Wu*
+   *Shane Lontis, Paul Dale, Po-Hsing Wu and Dimitri John Ledkov*
 
- * Add debuginfo Makefile target for unix platforms to produce
+ * Added support for hardware acceleration for HMAC on S390x architecture.
+
+   *Ingo Franzki*
+
+ * Added debuginfo Makefile target for unix platforms to produce
    a separate DWARF info file from the corresponding shared libs.
 
    *Neil Horman*
 
- * Add feature to retrieve configured TLS signature algorithms,
+ * Added support for encapsulation and decapsulation operations in the
+   pkeyutl command.
+
+   *Dmitry Belyavskiy*
+
+ * Added implementation of RFC 9579 (PBMAC1) in PKCS#12.
+
+   *Dmitry Belyavskiy*
+
+ * Add a new random seed source RNG `JITTER` using a statically linked
+   jitterentropy library.
+
+   *Dimitri John Ledkov*
+
+ * Added a feature to retrieve configured TLS signature algorithms,
    e.g., via the openssl list command.
 
    *Michael Baentsch*
 
+ * Deprecated TS_VERIFY_CTX_set_* functions and added replacement
+   TS_VERIFY_CTX_set0_* functions with improved semantics.
+
+   *Tobias Erbsland*
+
  * Redesigned Windows use of OPENSSLDIR/ENGINESDIR/MODULESDIR such that
    what were formerly build time locations can now be defined at run time
-   with registry keys. See NOTES-WINDOWS.md
+   with registry keys. See NOTES-WINDOWS.md.
 
    *Neil Horman*
 
@@ -95,8 +157,8 @@ OpenSSL 3.4
 
    *Tomáš Mráz*
 
- * Use an empty renegotiate extension in TLS client hellos instead of
-   the empty renegotiation SCSV, for all connections with a minimum TLS
+ * An empty renegotiate extension will be used in TLS client hellos instead
+   of the empty renegotiation SCSV, for all connections with a minimum TLS
    version > 1.0.
 
    *Tim Perry*
@@ -112,7 +174,14 @@ OpenSSL 3.4
 
    This work was sponsored by Siemens AG.
 
-    *Rajeev Ranjan*
+   *Rajeev Ranjan*
+
+ * Added support for issuedOnBehalfOf, auditIdentity, basicAttConstraints,
+   userNotice, acceptablePrivilegePolicies, acceptableCertPolicies,
+   subjectDirectoryAttributes, associatedInformation, delegatedNameConstraints,
+   holderNameConstraints and targetingInformation X.509v3 extensions.
+
+   *Jonathan M. Wilbur*
 
  * Added Attribute Certificate (RFC 5755) support. Attribute
    Certificates can be created, parsed, modified and printed via the
@@ -141,7 +210,31 @@ OpenSSL 3.4
 OpenSSL 3.3
 -----------
 
-### Changes between 3.3.0 and 3.3.1 [xx XXX xxxx]
+### Changes between 3.3.1 and 3.3.2 [xx XXX xxxx]
+
+ * Fixed possible denial of service in X.509 name checks.
+
+   Applications performing certificate name checks (e.g., TLS clients checking
+   server certificates) may attempt to read an invalid memory address when
+   comparing the expected name with an `otherName` subject alternative name of
+   an X.509 certificate. This may result in an exception that terminates the
+   application program.
+
+   ([CVE-2024-6119])
+
+   *Viktor Dukhovni*
+
+ * Fixed possible buffer overread in SSL_select_next_proto().
+
+   Calling the OpenSSL API function SSL_select_next_proto with an empty
+   supported client protocols buffer may cause a crash or memory contents
+   to be sent to the peer.
+
+   ([CVE-2024-5535])
+
+   *Matt Caswell*
+
+### Changes between 3.3.0 and 3.3.1 [4 Jun 2024]
 
  * Fixed potential use after free after SSL_free_buffers() is called.
 
@@ -192,11 +285,6 @@ OpenSSL 3.3
    *Tomáš Mráz and Paul Dale*
 
 ### Changes between 3.2 and 3.3.0 [9 Apr 2024]
-
- * Add a new random seed source RNG `JITTER` using a statically linked
-   jitterentropy library.
-
-   *Dimitri John Ledkov*
 
  * The `-verify` option to the `openssl crl` and `openssl req` will make
    the program exit with 1 on failure.
@@ -20781,6 +20869,8 @@ ndif
 
 <!-- Links -->
 
+[CVE-2024-6119]: https://www.openssl.org/news/vulnerabilities.html#CVE-2024-6119
+[CVE-2024-5535]: https://www.openssl.org/news/vulnerabilities.html#CVE-2024-5535
 [CVE-2024-4741]: https://www.openssl.org/news/vulnerabilities.html#CVE-2024-4741
 [CVE-2024-4603]: https://www.openssl.org/news/vulnerabilities.html#CVE-2024-4603
 [CVE-2024-2511]: https://www.openssl.org/news/vulnerabilities.html#CVE-2024-2511
