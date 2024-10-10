@@ -142,11 +142,6 @@ The following are notable capability bits from:
 
 =back
 
-<<<<<<< HEAD
-The capability vector is further extended with EAX, EDX, and EBX values
-returned by CPUID with EAX=7 and ECX=1 as input. Following bits
-are significant:
-=======
 The following are notable capability bits from:
 
   CPUID.(EAX=07H,ECX=1H).EDX and CPUID.(EAX=07H,ECX=1H).EBX
@@ -154,7 +149,6 @@ The following are notable capability bits from:
 =over 4
 
 =item bit #192+19 denoting availability of AVX10 Converged Vector ISA extension;
->>>>>>> origin/intel_cpuid_extensions
 
 =item bit #192+21 denoting availability of APX_F extension;
 
