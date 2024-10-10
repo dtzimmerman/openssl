@@ -10,54 +10,58 @@ OPENSSL_ia32cap - the x86[_64] processor capabilities vector
 
 =head1 DESCRIPTION
 
-OpenSSL supports a range of x86[_64] instruction set extensions. These
-extensions are denoted by individual bits in capability vector returned
-by processor in EDX:ECX register pair after executing CPUID instruction
-with EAX=1 input value (see Intel Application Note #241618). This vector
-is copied to memory upon toolkit initialization and used to choose
-between different code paths to provide optimal performance across wide
-range of processors. For the moment of this writing following bits are
-significant:
+OpenSSL supports a range of x86[_64] instruction set extensions and
+features. These extensions are denoted by individual bits stored in 32-bit
+capability vectors and represented logically below as five 64-bit vectors
+and their bit offset. Upon
+tookit initialization, the capability vectors are populated through
+successive executions of the CPUID instruction. After toolkit initialization
+is complete, populated vectors are used to choose between different code paths
+to provide optimal performance across a wide range of processors.
+
+The following are notable capability bits from:
+
+  CPUID.(EAX=01H).EDX and CPUID.(EAX=01H).ECX
 
 =over 4
 
-=item bit #4 denoting presence of Time-Stamp Counter.
+=item bit #0+4 denoting presence of Time-Stamp Counter.
 
-=item bit #19 denoting availability of CLFLUSH instruction;
+=item bit #0+19 denoting availability of CLFLUSH instruction;
 
-=item bit #20, reserved by Intel, is used to choose among RC4 code paths;
+=item bit #0+20, reserved by Intel, is used to choose among RC4 code paths;
 
-=item bit #23 denoting MMX support;
+=item bit #0+23 denoting MMX support;
 
-=item bit #24, FXSR bit, denoting availability of XMM registers;
+=item bit #0+24, FXSR bit, denoting availability of XMM registers;
 
-=item bit #25 denoting SSE support;
+=item bit #0+25 denoting SSE support;
 
-=item bit #26 denoting SSE2 support;
+=item bit #0+26 denoting SSE2 support;
 
-=item bit #28 denoting Hyperthreading, which is used to distinguish
+=item bit #0+28 denoting Hyperthreading, which is used to distinguish
 cores with shared cache;
 
-=item bit #30, reserved by Intel, denotes specifically Intel CPUs;
+=item bit #0+30, reserved by Intel, denotes specifically Intel CPUs;
 
-=item bit #33 denoting availability of PCLMULQDQ instruction;
+=item bit #0+33 denoting availability of PCLMULQDQ instruction;
 
-=item bit #41 denoting SSSE3, Supplemental SSE3, support;
+=item bit #0+41 denoting SSSE3, Supplemental SSE3, support;
 
-=item bit #43 denoting AMD XOP support (forced to zero on non-AMD CPUs);
+=item bit #0+43 denoting AMD XOP support (forced to zero on non-AMD CPUs);
 
-=item bit #54 denoting availability of MOVBE instruction;
+=item bit #0+54 denoting availability of MOVBE instruction;
 
-=item bit #57 denoting AES-NI instruction set extension;
+=item bit #0+57 denoting AES-NI instruction set extension;
 
-=item bit #58, XSAVE bit, lack of which in combination with MOVBE is used
+=item bit #0+58, XSAVE bit, lack of which in combination with MOVBE is used
 to identify Atom Silvermont core;
 
-=item bit #59, OSXSAVE bit, denoting availability of YMM registers;
+=item bit #0+59, OSXSAVE bit, denoting availability of YMM registers;
 
-=item bit #60 denoting AVX extension;
+=item bit #0+60 denoting AVX extension;
 
-=item bit #62 denoting availability of RDRAND instruction;
+=item bit #0+62 denoting availability of RDRAND instruction;
 
 =back
 
@@ -83,9 +87,9 @@ actually shared between logical cores. This in turn affects the decision
 on whether or not expensive countermeasures against cache-timing attacks
 are applied, most notably in AES assembler module.
 
-The capability vector is further extended with EBX, ECX, and EDX values 
-returned by CPUID with EAX=7 and ECX=0 as input. Following bits are 
-significant:
+The following are notable capability bits from:
+
+  CPUID.(EAX=07H,ECX=0H).EBX and CPUID.(EAX=07H,ECX=0H).ECX
 
 =over 4
 
@@ -104,8 +108,7 @@ and RORX;
 
 =item bit #64+19 denoting availability of ADCX and ADOX instructions;
 
-=item bit #64+21 denoting availability of VPMADD52[LH]UQ instructions,
-aka AVX512IFMA extension;
+=item bit #64+21 denoting availability of AVX512IFMA extension;
 
 =item bit #64+29 denoting availability of SHA extension;
 
@@ -117,27 +120,53 @@ aka AVX512IFMA extension;
 
 =item bit #64+42 denoting availability of VPCLMULQDQ extension;
 
+=back
+
+The following are notable capability bits from:
+
+  CPUID.(EAX=07H,ECX=0H).EDX and CPUID.(EAX=07H,ECX=1H).EAX
+
+=over 4
+
 =item bit #128+15 denoting availability of Hybrid CPU;
 
 =item bit #128+29 denoting support for IA32_ARCH_CAPABILITIES MSR;
 
+=item bit #128+32 denoting availability of SHA512 extension;
+
+=item bit #128+33 denoting availability of SM3 extension;
+
+=item bit #128+34 denoting availability of SM4 extension;
+
+=item bit #128+55 denoting availability of AVX-IFMA extension;
+
 =back
 
-The capability vector is further extended with EAX, EDX, and EBX values 
-returned by CPUID with EAX=7 and ECX=1 as input. Following bits 
-are significant:
+The following are notable capability bits from:
 
-=item bit #128+0 denoting availability of SHA512 extension;
+  CPUID.(EAX=07H,ECX=1H).EDX and CPUID.(EAX=07H,ECX=1H).EBX
 
-=item bit #128+1 denoting availability of SM3 extension;
+=over 4
 
-=item bit #128+2 denoting availability of SM4 extension;
+=item bit #192+19 denoting availability of AVX10 Converged Vector ISA extension;
 
-=item bit #128+23 denoting availability of AVX-IFMA extension;
+=item bit #192+21 denoting availability of APX_F extension;
 
-=item bit #128+51 denoting availability of AVX10 extension;
+=back
 
-=item bit #128+53 denoting availability of APX_F extension;
+The following are notable capability bits from:
+
+  CPUID.(EAX=07H,ECX=1H).ECX and CPUID.(EAX=24H,ECX=0H).EBX
+
+=over 4
+
+=item bits #256+32+[0:7] denoting AVX10 Converged Vector ISA Version (8 bits);
+
+=item bits #256+48 denoting AVX10 XMM support;
+
+=item bits #256+49 denoting AVX10 YMM support;
+
+=item bits #256+50 denoting AVX10 ZMM support;
 
 =back
 
