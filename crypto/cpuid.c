@@ -126,11 +126,10 @@ void OPENSSL_cpuid_setup(void)
             vec = OPENSSL_ia32_cpuid(OPENSSL_ia32cap_P);
         }
 
-        if (env && (((env = ossl_strchr(env, ':')) != NULL)) ) {
+        if (env && (((env = ossl_strchr(env, ':')) != NULL))) {
             env++;
-            if (env[0] != ':') {
+            if (env[0] != ':' && env[0] != NULL) {
                 IA32CAP vecx;
-
                 off = (env[0] == '~') ? 1 : 0;
                 vecx = ossl_strtouint64(env + off);
                 if (off) {
@@ -143,11 +142,10 @@ void OPENSSL_cpuid_setup(void)
             }
         }
 
-        if (env && (((env = ossl_strchr(env, ':')) != NULL)) ) {
+        if (env && (((env = ossl_strchr(env, ':')) != NULL))) {
             env++;
-            if (env[0] != ':') {
+            if (env[0] != ':' && env[0] != NULL) {
                 IA32CAP vecx;
-
                 off = (env[0] == '~') ? 1 : 0;
                 vecx = ossl_strtouint64(env + off);
                 if (off) {
@@ -160,12 +158,11 @@ void OPENSSL_cpuid_setup(void)
             }
         }
 
-        if (env && (((env = ossl_strchr(env, ':')) != NULL)) ) {
+        if (env && (((env = ossl_strchr(env, ':')) != NULL))) {
             env++;
-            if (env[0] != ':') {
+            if (env[0] != ':' && env[0] != NULL) {
                 IA32CAP vecx;
                 off = (env[0] == '~') ? 1 : 0;
-
                 vecx = ossl_strtouint64(env + off);
                 if (off) {
                     OPENSSL_ia32cap_P[6] &= ~(unsigned int)vecx;
@@ -179,7 +176,7 @@ void OPENSSL_cpuid_setup(void)
 
         if (env && (((env = ossl_strchr(env, ':')) != NULL))) {
             env++;
-            if (env[0] != ':') {
+            if (env[0] != ':' && env[0] != NULL) {
                 IA32CAP vecx;
                 off = (env[0] == '~') ? 1 : 0;
                 vecx = ossl_strtouint64(env + off);
@@ -193,9 +190,10 @@ void OPENSSL_cpuid_setup(void)
             }
         }
 
-        // If AVX10 is disabled, zero out its details
-        if (!(OPENSSL_ia32cap_P[9] & (1 << 19)))
+        // If AVX10 is disabled, zero out its detailed cap bits
+        if (!(OPENSSL_ia32cap_P[6] & (1 << 19))) {
             OPENSSL_ia32cap_P[9] = 0;
+        }
 
     } else {
         vec = OPENSSL_ia32_cpuid(OPENSSL_ia32cap_P);
