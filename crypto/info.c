@@ -173,7 +173,7 @@ DEFINE_RUN_ONCE_STATIC(init_info_strings)
     if ((env = getenv("OPENSSL_ia32cap")) != NULL) {
         BIO_snprintf(ossl_cpu_info_str + strlen(ossl_cpu_info_str),
                      sizeof(ossl_cpu_info_str) - strlen(ossl_cpu_info_str),
-                     " env:%s", env);
+                     " env=%s", env);
         BIO_snprintf(ossl_cpu_info_str_env, sizeof(ossl_cpu_info_str_env),"%s", env);
     }
 
