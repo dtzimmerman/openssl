@@ -31,11 +31,8 @@ Programmer's Manual (Volume 3).
 =head3 Notable Capability Bits for LV0
 
 The following are notable capability bits from logical vector 0 (LV0)
-resulting from the following execution of CPUID:
-
-=item CPUID.(EAX=01H).EDX
-
-=item CPUID.(EAX=01H).ECX
+resulting from the following execution of CPUID.(EAX=01H).EDX and
+CPUID.(EAX=01H).ECX:
 
 =over 4
 
@@ -81,12 +78,9 @@ to identify Atom Silvermont core;
 
 =head3 Notable Capability Bits for LV1
 
-The following are notable capability bits from logical vector 1 (LV1))
-resulting from the following execution of CPUID:
-
-=item CPUID.(EAX=07H,ECX=0H).EBX
-
-=item CPUID.(EAX=07H,ECX=0H).ECX
+The following are notable capability bits from logical vector 1 (LV1)
+resulting from the following execution of CPUID.(EAX=07H,ECX=0H).EBX and
+CPUID.(EAX=07H,ECX=0H).ECX:
 
 =over 4
 
@@ -122,11 +116,8 @@ and RORX;
 =head3 Notable Capability Bits for LV2
 
 The following are notable capability bits from logical vector 2 (LV2)
-resulting from the following execution of CPUID:
-
-=item CPUID.(EAX=07H,ECX=0H).EDX
-
-=item CPUID.(EAX=07H,ECX=1H).EAX
+resulting from the following execution of CPUID.(EAX=07H,ECX=0H).EDX and
+CPUID.(EAX=07H,ECX=1H).EAX:
 
 =over 4
 
@@ -147,11 +138,8 @@ resulting from the following execution of CPUID:
 =head3 Notable Capability Bits for LV3
 
 The following are notable capability bits from logical vector 3 (LV3)
-resulting from the following execution of CPUID:
-
-=item CPUID.(EAX=07H,ECX=1H).EDX
-
-=item CPUID.(EAX=07H,ECX=1H).EBX
+resulting from the following execution of CPUID.(EAX=07H,ECX=1H).EDX and
+CPUID.(EAX=07H,ECX=1H).EBX:
 
 =over 4
 
@@ -164,11 +152,8 @@ resulting from the following execution of CPUID:
 =head3 Notable Capability Bits for LV4
 
 The following are notable capability bits from logical vector 4 (LV4)
-resulting from the following execution of CPUID:
-
-=item CPUID.(EAX=07H,ECX=1H).ECX
-
-=item CPUID.(EAX=24H,ECX=0H).EBX
+resulting from the following execution of CPUID.(EAX=07H,ECX=1H).ECX and
+CPUID.(EAX=24H,ECX=0H).EBX:
 
 =over 4
 
@@ -184,7 +169,7 @@ resulting from the following execution of CPUID:
 
 =head3 OPENSSL_ia32cap environment variable
 
-The B<OPENSSL_ia32cap> environment variable provides mechanism to override
+The B<OPENSSL_ia32cap> environment variable provides a mechanism to override
 the default capability vector values at library initialization time.
 The variable consists of a series of 64-bit hexadecimal numbers representing each
 of the logical vectors (LV) described above. Each value is delimited by a 'B<:>'.
