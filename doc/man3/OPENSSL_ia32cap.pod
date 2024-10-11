@@ -14,7 +14,7 @@ OpenSSL supports a range of x86[_64] instruction set extensions and
 features. These extensions are denoted by individual or groups of bits
 stored internaly as ten 32-bit capability vectors and for simplicity 
 represented logically below as five 64-bit vectors. This logical 
-vector <lv> representation is used to streamline the definition of the 
+vector (LV) representation is used to streamline the definition of the 
 OPENSSL_ia32cap environment variable.
 
 Upon tookit initialization, the capability vectors are populated through
@@ -30,7 +30,7 @@ Programmer's Manual (Volume 3).
 
 =head3 Notable Capability Bits for LV0
 
-The following are notable capability bits from logical vector 0 <lv0>
+The following are notable capability bits from logical vector 0 (LV0)
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=01H).EDX
@@ -80,7 +80,7 @@ to identify Atom Silvermont core;
 
 =head3 Notable Capability Bits for LV1
 
-The following are notable capability bits from logical vector 1 <lv1>
+The following are notable capability bits from logical vector 1 (LV1))
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=07H,ECX=0H).EBX
@@ -119,7 +119,7 @@ and RORX;
 
 =head3 Notable Capability Bits for LV2
 
-The following are notable capability bits from logical vector 2 <lv2>
+The following are notable capability bits from logical vector 2 (LV2)
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=07H,ECX=0H).EDX
@@ -143,7 +143,7 @@ resulting from the following execution of CPUID:
 
 =head3 Notable Capability Bits for LV3
 
-The following are notable capability bits from logical vector 3 <lv3>
+The following are notable capability bits from logical vector 3 (LV3)
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=07H,ECX=1H).EDX
@@ -159,7 +159,7 @@ resulting from the following execution of CPUID:
 
 =head3 Notable Capability Bits for LV4
 
-The following are notable capability bits from logical vector 4 <lv4>
+The following are notable capability bits from logical vector 4 (LV4)
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=07H,ECX=1H).ECX
@@ -182,25 +182,25 @@ resulting from the following execution of CPUID:
 The B<OPENSSL_ia32cap> environment variable provides mechanism to override
 the default capability vector values at library initialization time.
 The variable consists of a series of 64-bit hexadecimal numbers representing each
-of the logical vectors described above. Each value is delimited by a 'B<:>'.
+of the logical vectors (LV) described above. Each value is delimited by a 'B<:>'.
 
-C<env OPENSSL_ia32cap=\<lv0\>:\<lv1\>:\<lv2\>:\<lv3\>:\<lv4\>>
+C<env OPENSSL_ia32cap=LV0:LV1:LV2::LV3:LV4>
 
 Used in this form, each non-null logical vector will *overwrite* the entire corresponding
 capability vector pair with the provided value.
 
 To illustrate, the following will zero all capability bits in logical vectors 2 and 3:
 
-B<OPENSSL_ia32cap>=B<:>B<:>0x0B<:>0x0B<:>
+C<env OPENSSL_ia32cap=::0x0:0x0:>
 
 A more likely usage scenario would be to disable specific instruction set extensions.
 The 'B<~>' character is used to specify a bit mask of the extensions to be disabled for
 a particular logical vector.
 
-To illustrate, the following will disable AESNI (<lv0> bit 57) and VAES (<lv1> bit 41)
+To illustrate, the following will disable AESNI (LV0 bit 57) and VAES (LV1 bit 41)
 extensions and therefore any codepaths using those extensions:
 
-B<OPENSSL_ia32cap>=B<~>0x200000000000000B<:><B<~>0x20000000000
+C<env OPENSSL_ia32cap=~0x200000000000000:~0x20000000000>
 
 =head1 NOTES
 
