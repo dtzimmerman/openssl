@@ -73,7 +73,7 @@ to identify Atom Silvermont core;
 
 =item bit #0+62 denoting availability of RDRAND instruction;
 
-=back
+=back 4
 
 The following are notable capability bits from logical vector 1 <lv1>
 resulting from the following execution of CPUID:
@@ -110,7 +110,7 @@ and RORX;
 
 =item bit #64+42 denoting availability of VPCLMULQDQ extension;
 
-=back
+=back 4
 
 The following are notable capability bits from logical vector 2 <lv2>
 resulting from the following execution of CPUID:
@@ -132,7 +132,7 @@ resulting from the following execution of CPUID:
 
 =item bit #128+55 denoting availability of AVX-IFMA extension;
 
-=back
+=back 4
 
 The following are notable capability bits from logical vector 3 <lv3>
 resulting from the following execution of CPUID:
@@ -146,7 +146,7 @@ resulting from the following execution of CPUID:
 
 =item bit #192+21 denoting availability of APX_F extension;
 
-=back
+=back 4
 
 The following are notable capability bits from logical vector 4 <lv4>
 resulting from the following execution of CPUID:
@@ -164,7 +164,7 @@ resulting from the following execution of CPUID:
 
 =item bits #256+50 denoting AVX10 ZMM support;
 
-=back
+=back 4
 
 The B<OPENSSL_ia32cap> environment variable provides mechanism to override
 the default capability vector values at library initialization time.
