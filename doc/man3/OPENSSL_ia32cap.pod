@@ -34,6 +34,7 @@ The following are notable capability bits from logical vector 0 (LV0)
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=01H).EDX
+
 =item CPUID.(EAX=01H).ECX
 
 =over 4
@@ -84,6 +85,7 @@ The following are notable capability bits from logical vector 1 (LV1))
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=07H,ECX=0H).EBX
+
 =item CPUID.(EAX=07H,ECX=0H).ECX
 
 =over 4
@@ -123,6 +125,7 @@ The following are notable capability bits from logical vector 2 (LV2)
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=07H,ECX=0H).EDX
+
 =item CPUID.(EAX=07H,ECX=1H).EAX
 
 =over 4
@@ -147,6 +150,7 @@ The following are notable capability bits from logical vector 3 (LV3)
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=07H,ECX=1H).EDX
+
 =item CPUID.(EAX=07H,ECX=1H).EBX
 
 =over 4
@@ -163,6 +167,7 @@ The following are notable capability bits from logical vector 4 (LV4)
 resulting from the following execution of CPUID:
 
 =item CPUID.(EAX=07H,ECX=1H).ECX
+
 =item CPUID.(EAX=24H,ECX=0H).EBX
 
 =over 4
@@ -205,7 +210,7 @@ C<env OPENSSL_ia32cap=~0x200000000000000:~0x20000000000>
 =head1 NOTES
 
 Not all capability bits are copied from CPUID output verbatim. An example
-of this is the somewhat less intuitive clearing of <lv0> bit #28, or ~0x10000000
+of this is the somewhat less intuitive clearing of LV0 bit #28, or ~0x10000000
 in the "environment variable" terms. It has been adjusted to reflect whether or
 not the data cache is actually shared between logical cores. This in turn affects
 the decision on whether or not expensive countermeasures against cache-timing attacks
