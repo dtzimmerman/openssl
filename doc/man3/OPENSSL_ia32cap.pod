@@ -165,7 +165,7 @@ CPUID.(EAX=24H,ECX=0H).EBX:
 
 =item bits #256+50 denoting AVX10 ZMM support;
 
-=back 4
+=back
 
 =head3 OPENSSL_ia32cap environment variable
 
