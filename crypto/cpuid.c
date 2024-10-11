@@ -128,7 +128,7 @@ void OPENSSL_cpuid_setup(void)
 
         if (env && (((env = ossl_strchr(env, ':')) != NULL))) {
             env++;
-            if (env[0] != ':' && env[0] != NULL) {
+            if ((env != NULL) && (env[0] != '\0') && (env[0] != ':')) {
                 IA32CAP vecx;
                 off = (env[0] == '~') ? 1 : 0;
                 vecx = ossl_strtouint64(env + off);
@@ -138,13 +138,13 @@ void OPENSSL_cpuid_setup(void)
                 } else {
                     OPENSSL_ia32cap_P[2] = (unsigned int)vecx;
                     OPENSSL_ia32cap_P[3] = (unsigned int)(vecx >> 32);
-                }
+              }
             }
         }
 
         if (env && (((env = ossl_strchr(env, ':')) != NULL))) {
             env++;
-            if (env[0] != ':' && env[0] != NULL) {
+            if ((env != NULL) && (env[0] != '\0') && (env[0] != ':')) {
                 IA32CAP vecx;
                 off = (env[0] == '~') ? 1 : 0;
                 vecx = ossl_strtouint64(env + off);
@@ -154,13 +154,13 @@ void OPENSSL_cpuid_setup(void)
                 } else {
                     OPENSSL_ia32cap_P[4] = (unsigned int)vecx;
                     OPENSSL_ia32cap_P[5] = (unsigned int)(vecx >> 32);
-                }
+              }
             }
         }
 
         if (env && (((env = ossl_strchr(env, ':')) != NULL))) {
             env++;
-            if (env[0] != ':' && env[0] != NULL) {
+            if ((env != NULL) && (env[0] != '\0') && (env[0] != ':')) {
                 IA32CAP vecx;
                 off = (env[0] == '~') ? 1 : 0;
                 vecx = ossl_strtouint64(env + off);
@@ -170,13 +170,13 @@ void OPENSSL_cpuid_setup(void)
                 } else {
                     OPENSSL_ia32cap_P[6] = (unsigned int)vecx;
                     OPENSSL_ia32cap_P[7] = (unsigned int)(vecx >> 32);
-                }
+              }
             }
         }
 
         if (env && (((env = ossl_strchr(env, ':')) != NULL))) {
             env++;
-            if (env[0] != ':' && env[0] != NULL) {
+            if ((env != NULL) && (env[0] != '\0') && (env[0] != ':')) {
                 IA32CAP vecx;
                 off = (env[0] == '~') ? 1 : 0;
                 vecx = ossl_strtouint64(env + off);
@@ -186,7 +186,7 @@ void OPENSSL_cpuid_setup(void)
                 } else {
                     OPENSSL_ia32cap_P[8] = (unsigned int)vecx;
                     OPENSSL_ia32cap_P[9] = (unsigned int)(vecx >> 32);
-                }
+              }
             }
         }
 
