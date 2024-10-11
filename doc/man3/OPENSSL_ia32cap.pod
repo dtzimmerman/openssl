@@ -177,6 +177,8 @@ resulting from the following execution of CPUID:
 
 =back 4
 
+=head3 OPENSSL_ia32cap environment variable
+
 The B<OPENSSL_ia32cap> environment variable provides mechanism to override
 the default capability vector values at library initialization time.
 The variable consists of a series of 64-bit hexadecimal numbers representing each
