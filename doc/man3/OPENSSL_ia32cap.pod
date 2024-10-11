@@ -184,14 +184,14 @@ the default capability vector values at library initialization time.
 The variable consists of a series of 64-bit hexadecimal numbers representing each
 of the logical vectors described above. Each value is delimited by a C<:>.
 
- B<OPENSSL_ia32cap>=<lv0>C<:><lv1>C<:><lv2>C<:><lv3>C<:><lv4>
+B<OPENSSL_ia32cap>=<lv0>C<:><lv1>C<:><lv2>C<:><lv3>C<:><lv4>
 
 Used in this form, each non-null logical vector will *overwrite* the entire corresponding
 capability vector pair with the provided value.
 
 To illustrate, the following will zero all capability bits in logical vectors 2 and 3:
 
- B<OPENSSL_ia32cap>=C<:>C<:>0x0C<:>0x0C<:>
+B<OPENSSL_ia32cap>=C<:>C<:>0x0C<:>0x0C<:>
 
 A more likely usage scenario would be to disable specific instruction set extensions.
 The C<~> character is used to specify a bit mask of the extensions to be disabled for
@@ -200,7 +200,7 @@ a particular logical vector.
 To illustrate, the following will disable AESNI (<lv0> bit 57) and VAES (<lv1> bit 41)
 extensions and therefore any codepaths using those extensions:
 
- B<OPENSSL_ia32cap>=C<~>0x200000000000000C<:><C<~>0x20000000000
+B<OPENSSL_ia32cap>=C<~>0x200000000000000C<:><C<~>0x20000000000
 
 =head1 NOTES
 
