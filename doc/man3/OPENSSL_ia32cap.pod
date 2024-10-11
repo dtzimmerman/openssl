@@ -184,7 +184,9 @@ the default capability vector values at library initialization time.
 The variable consists of a series of 64-bit hexadecimal numbers representing each
 of the logical vectors described above. Each value is delimited by a 'B<:>'.
 
-B<OPENSSL_ia32cap>=<lv0>B<:><lv1>B<:><lv2>B<:><lv3>B<:><lv4>
+=over 4
+C<B<OPENSSL_ia32cap>=<lv0>B<:><lv1>B<:><lv2>B<:><lv3>B<:><lv4>>
+=back
 
 Used in this form, each non-null logical vector will *overwrite* the entire corresponding
 capability vector pair with the provided value.
