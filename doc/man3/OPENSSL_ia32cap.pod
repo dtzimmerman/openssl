@@ -12,12 +12,13 @@ OPENSSL_ia32cap - the x86[_64] processor capabilities vector
 
 OpenSSL supports a range of x86[_64] instruction set extensions and
 features. These extensions are denoted by individual or groups of bits
-stored in 32-bit capability vectors and for simplicity represented logically
-below as five 64-bit vectors and their bit offsets. This logical representation
-is used to streamline the definition of the OPENSSL_ia32cap environment variable.
+stored internaly as ten 32-bit capability vectors and for simplicity 
+represented logically below as five 64-bit vectors. This logical 
+vector <lv> representation is used to streamline the definition of the 
+OPENSSL_ia32cap environment variable.
 
 Upon tookit initialization, the capability vectors are populated through
-successive executions of the CPUID instruction, after which OPENSSL_ia32cap
+successive executions of the CPUID instruction, after which any OPENSSL_ia32cap
 environment variable capability bit modications are applied. After toolkit
 initialization is complete, populated vectors are then used to choose 
 between different code paths to provide optimal performance across a wide
@@ -27,7 +28,7 @@ Further CPUID information can be found in the Intel Architecture
 Instruction Set Extensions Programming Reference, and the AMD64 Architecture
 Programmer's Manual (Volume 3).
 
-=head2 LV0 notable capability bits
+=head3 LV0 notable capability bits
 
 The following are notable capability bits from logical vector 0 <lv0>
 resulting from the following execution of CPUID:
